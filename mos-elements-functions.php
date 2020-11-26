@@ -28,7 +28,8 @@ function mos_elements_admin_enqueue_scripts(){
 
 		wp_enqueue_script( 'mos-elements-functions', plugins_url( 'js/mos-elements-functions.js', __FILE__ ), array('jquery') );
 		wp_enqueue_script( 'mos-elements-admin', plugins_url( 'js/mos-elements-admin.js', __FILE__ ), array('jquery') );
-	}
+	}    
+	wp_enqueue_style( 'mos-elements', plugins_url( 'css/mos-elements.css', __FILE__ ) );
 
 }
 add_action( 'admin_enqueue_scripts', 'mos_elements_admin_enqueue_scripts' );
@@ -61,14 +62,14 @@ add_action( 'wp_enqueue_scripts', 'mos_elements_ajax_scripts' );
 add_action( 'admin_enqueue_scripts', 'mos_elements_ajax_scripts' );
 function mos_elements_scripts() {
 	global $mos_elements_option;
-	if ($mos_elements_option['css']) {
+	if (@$mos_elements_option['css']) {
 		?>
 		<style>
 			<?php echo $mos_elements_option['css'] ?>
 		</style>
 		<?php
 	}
-	if ($mos_elements_option['js']) {
+	if (@$mos_elements_option['js']) {
 		?>
 		<style>
 			<?php echo $mos_elements_option['js'] ?>
