@@ -41,52 +41,32 @@ class Mos_Posts_Widget extends Widget_Base {
                         'card' => __( 'Card', 'elementor' ),
                     ],
                 ]
-            );
-
-            $repeater = new \Elementor\Repeater();
-
-            $repeater->add_control(
-                'list_icon',
+            );		
+            $this->add_control(
+                '_content_layout_tab_per_page',
                 [
-                    'label' => __( 'Icon', 'plugin-domain' ),
-                    'type' => \Elementor\Controls_Manager::ICON,
-                    'selectors' => [
-                        '{{WRAPPER}} {{CURRENT_ITEM}}' => 'color: {{VALUE}}'
-                    ],
-                ]
-            );
-
-            $repeater->add_control(
-                'list_title', [
-                    'label' => __( 'Title', 'plugin-domain' ),
-                    'type' => \Elementor\Controls_Manager::TEXT,
-                    'default' => __( 'List Title' , 'plugin-domain' ),
-                    'label_block' => true,
-                ]
-            );
-
-            $repeater->add_control(
-                'list_content', [
-                    'label' => __( 'Content', 'plugin-domain' ),
-                    'type' => \Elementor\Controls_Manager::TEXTAREA,
-                    'default' => __( 'List Content' , 'plugin-domain' ),
-                    'show_label' => false,
+                    'label' => __( 'Posts Per Page', 'elementor' ),
+                    // 'label_block' => true,
+                    'type' => Controls_Manager::NUMBER,
+                    'default' => '3',                    
+				    'min' => 1,
                 ]
             );
 
             $this->add_control(
-                'list',
+                'hr',
                 [
-                    'label' => __( 'Iconbox List', 'plugin-domain' ),
-                    'type' => \Elementor\Controls_Manager::REPEATER,
-                    'fields' => $repeater->get_controls(),
-                    /*'default' => [
-                        [
-                            'list_title' => __( 'Title #1', 'plugin-domain' ),
-                            'list_content' => __( 'Item content. Click the edit button to change this text.', 'plugin-domain' ),
-                        ],
-                    ],*/
-                    'title_field' => '{{{ list_title }}}',
+                    'type' => \Elementor\Controls_Manager::DIVIDER,
+                ]
+            );
+            $this->add_control(
+                '_content_layout_tab_image',
+                [
+                    'label' => __( 'Image', 'elementor' ),
+                    // 'label_block' => true,
+                    'type' => Controls_Manager::SWITCHER,                    
+                    'label_on' => 'Hide',
+                    'label_off' => 'Show',
                 ]
             );
 
