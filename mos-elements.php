@@ -2,7 +2,7 @@
 /*
 Plugin Name: Mos Elements
 Description: Base of future plugin
-Version: 0.0.1
+Version: 1.0.0
 Author: Md. Mostak Shahid
 */
 
