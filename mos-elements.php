@@ -60,6 +60,3 @@ function mos_elements_settings_link($links) {
     return $links; 
 } 
 add_filter("plugin_action_links_$plugin", 'mos_elements_settings_link' );
-
-
-

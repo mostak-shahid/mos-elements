@@ -20,6 +20,9 @@ class Mos_Posts_Widget extends Widget_Base {
 	}
 	
 	protected function _register_controls() {
+        $post_types = get_post_types(['public' => true, 'show_in_nav_menus' => true], 'objects');
+        $post_types = wp_list_pluck($post_types, 'label', 'name');
+        // var_dump($post_types);
         // Start Layout Controls
 		$this->start_controls_section(
 			'_content_layout_tab',
@@ -69,6 +72,22 @@ class Mos_Posts_Widget extends Widget_Base {
                     'label_off' => 'Show',
                 ]
             );
+            $this->add_group_control(
+                Group_Control_Image_Size::get_type(),
+                [
+                    'name' => 'image', // Usage: `{name}_size` and `{name}_custom_dimension`, in this case `image_size` and `image_custom_dimension`.
+                    'default' => 'large',
+                    'separator' => 'none',
+                ]
+            );
+            $this->add_group_control(
+                Group_Control_Image_Size::get_type(),
+                [
+                    'name' => 'image', // Usage: `{name}_size` and `{name}_custom_dimension`, in this case `image_size` and `image_custom_dimension`.
+                    'default' => 'large',
+                    'separator' => 'none',
+                ]
+            );
 
 		$this->end_controls_section();
         // End Layout Controls
@@ -78,7 +97,17 @@ class Mos_Posts_Widget extends Widget_Base {
 			[
 				'label' => __( 'Query', 'elementor' ),
 			]
-		);
+		);        
+
+            $this->add_control(
+                'post_type',
+                [
+                    'label' => __('Source', 'essential-addons-for-elementor-lite'),
+                    'type' => Controls_Manager::SELECT,
+                    'options' => $post_types,
+                    'default' => 'post',
+                ]
+            );
         
 		$this->end_controls_section();
         //End Query Controls
