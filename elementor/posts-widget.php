@@ -1,6 +1,7 @@
 <?php
 namespace Elementor;
-
+include "Helper.php";
+use MOS_Elements\Classes\Helper;
 class Mos_Posts_Widget extends Widget_Base {
 	
 	public function get_name() {
@@ -16,13 +17,163 @@ class Mos_Posts_Widget extends Widget_Base {
 	}
 	
 	public function get_categories() {
-		return [ 'basic' ];
+		return [ 'mos-elements' ];
 	}
 	
 	protected function _register_controls() {
         $post_types = get_post_types(['public' => true, 'show_in_nav_menus' => true], 'objects');
         $post_types = wp_list_pluck($post_types, 'label', 'name');
-        // var_dump($post_types);
+        $users = [];
+        $all_user = get_users();
+        foreach($all_user as $user){
+            $users[$user->ID] = $user->display_name;
+        } 
+        $taxonomies = get_taxonomies([], 'objects');
+        $orderby = array(
+            'ID' => 'Post ID',
+            'author' => 'Post Author',
+            'title' => 'Title',
+            'date' => 'Date',
+            'modified' => 'Last Modified Date',
+            'parent' => 'Parent Id',
+            'rand' => 'Random',
+            'comment_count' => 'Comment Count',
+            'menu_order' => 'Menu Order',
+        );
+        // Start Query Controls
+		$this->start_controls_section(
+			'_content_query_tab',
+			[
+				'label' => __( 'Query', 'elementor' ),
+			]
+		);        
+
+            $this->add_control(
+                'post_type',
+                [
+                    'label' => __('Source', 'elementor'),
+                    'type' => Controls_Manager::SELECT,
+                    'options' => $post_types,
+                    'default' => 'post',
+                ]
+            );
+
+            $this->add_control(
+                'authors',
+                [
+                    'label' => __('Author', 'elementor'),
+                    'label_block' => true,
+                    'type' => Controls_Manager::SELECT2,
+                    'multiple' => true,
+                    'options' => $users,
+                    'default' => '1',
+                ]
+            );
+        
+
+            foreach ($taxonomies as $taxonomy => $object) {
+                if (!isset($object->object_type[0]) || !in_array($object->object_type[0], array_keys($post_types))) {
+                    continue;
+                }
+
+                $this->add_control(
+                    $taxonomy . '_ids',
+                    [
+                        'label' => $object->label,
+                        'type' => Controls_Manager::SELECT2,
+                        'label_block' => true,
+                        'multiple' => true,
+                        'object_type' => $taxonomy,
+                        'options' => wp_list_pluck(get_terms($taxonomy), 'name', 'term_id'),
+                        'condition' => [
+                            'post_type' => $object->object_type,
+                        ],
+                    ]
+                );
+            }
+
+            $this->add_control(
+                'post__not_in',
+                [
+                    'label' => __('Exclude', 'essential-addons-for-elementor-lite'),
+                    'type' => Controls_Manager::SELECT2,
+                    'options' => Helper::get_post_list(),
+                    'label_block' => true,
+                    'post_type' => '',
+                    'multiple' => true,
+                    'condition' => [
+                        'post_type!' => ['by_id', 'source_dynamic'],
+                    ],
+                ]
+            );
+
+            $this->add_control(
+                'posts_per_page',
+                [
+                    'label' => __('Posts Per Page', 'essential-addons-for-elementor-lite'),
+                    'type' => Controls_Manager::NUMBER,
+                    'default' => '4',
+                ]
+            );
+
+            $this->add_control(
+                'offset',
+                [
+                    'label' => __('Offset', 'essential-addons-for-elementor-lite'),
+                    'type' => Controls_Manager::NUMBER,
+                    'default' => '0',
+                ]
+            );
+
+            $this->add_control(
+                'orderby',
+                [
+                    'label' => __('Order By', 'essential-addons-for-elementor-lite'),
+                    'type' => Controls_Manager::SELECT,
+                    //'options' => ControlsHelper::get_post_orderby_options(),
+                    'options' => $orderby,
+                    'default' => 'date',
+
+                ]
+            );
+
+            $this->add_control(
+                'order',
+                [
+                    'label' => __('Order', 'essential-addons-for-elementor-lite'),
+                    'type' => Controls_Manager::SELECT,
+                    'options' => [
+                        'asc' => 'Ascending',
+                        'desc' => 'Descending',
+                    ],
+                    'default' => 'desc',
+
+                ]
+            );
+        
+            $this->add_responsive_control(
+                'eael_post_grid_columns',
+                [
+                    'label' => esc_html__('Column', 'elementor'),
+                    'type' => Controls_Manager::SELECT,
+                    'default' => 'eael-col-4',
+                    'tablet_default' => 'eael-col-2',
+                    'mobile_default' => 'eael-col-1',
+                    'options' => [
+                        'eael-col-1' => esc_html__('1', 'elementor'),
+                        'eael-col-2' => esc_html__('2', 'elementor'),
+                        'eael-col-3' => esc_html__('3', 'elementor'),
+                        'eael-col-4' => esc_html__('4', 'elementor'),
+                        'eael-col-5' => esc_html__('5', 'elementor'),
+                        'eael-col-6' => esc_html__('6', 'elementor'),
+                    ],
+                    'prefix_class' => 'elementor-grid%s-',
+                    'frontend_available' => true,
+                ]
+            );
+        
+		$this->end_controls_section();
+        //End Query Controls
         // Start Layout Controls
 		$this->start_controls_section(
 			'_content_layout_tab',
@@ -91,26 +242,6 @@ class Mos_Posts_Widget extends Widget_Base {
 
 		$this->end_controls_section();
         // End Layout Controls
-        // Start Query Controls
-		$this->start_controls_section(
-			'_content_query_tab',
-			[
-				'label' => __( 'Query', 'elementor' ),
-			]
-		);        
-
-            $this->add_control(
-                'post_type',
-                [
-                    'label' => __('Source', 'essential-addons-for-elementor-lite'),
-                    'type' => Controls_Manager::SELECT,
-                    'options' => $post_types,
-                    'default' => 'post',
-                ]
-            );
-        
-		$this->end_controls_section();
-        //End Query Controls
         // Start Pagination Controls
 		$this->start_controls_section(
 			'_content_pagination_tab',

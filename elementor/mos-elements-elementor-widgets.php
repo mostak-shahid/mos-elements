@@ -31,3 +31,22 @@ add_action( 'init', 'my_elementor_init' );
 function my_elementor_init() {
 	Mos_Elements_Elementor_Widgets::get_instance();
 }
+function mos_add_elementor_widget_categories( $elements_manager ) {
+
+	$elements_manager->add_category(
+		'mos-elements',
+		[
+			'title' => __( 'Mos Elements', 'plugin-name' ),
+			'icon' => 'fa fa-plug',
+		]
+	);
+	/*$elements_manager->add_category(
+		'second-category',
+		[
+			'title' => __( 'Second Category', 'plugin-name' ),
+			'icon' => 'fa fa-plug',
+		]
+	);*/
+
+}
+add_action( 'elementor/elements/categories_registered', 'mos_add_elementor_widget_categories' );
