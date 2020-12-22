@@ -301,6 +301,40 @@ class Mos_Posts_Widget extends Widget_Base {
                     ],
                 ]
             );
+            $this->add_control(
+                'hr-meta',
+                [
+                    'type' => \Elementor\Controls_Manager::DIVIDER,
+                ]
+            );
+            $this->add_control(
+                '_content_layout_tab_excerpt_meta',
+                [
+                    'label' => __('Meta Data', 'elementor'),
+                    'label_block' => true,
+                    'type' => Controls_Manager::SELECT2,
+                    'multiple' => true,
+                    'options' => [ 
+                        'author' => __('Author', 'elementor'),
+                        'date' => __('Date', 'elementor'),
+                        'time' => __('Time', 'elementor'),
+                        'comments' => __('Comments', 'elementor'),
+                        'modified' => __('Date Modified', 'elementor'),
+                    ],
+                ]
+            );
+            //Separator Between  
+            $this->add_control(
+                '_content_layout_tab_excerpt_meta_separator',
+                [
+                    'label' => __('Separator Between', 'elementor'),
+                    'type' => Controls_Manager::TEXT,
+                    'default' => '///',
+                    'tablet_default' => '',
+                    'mobile_default' => '',
+                    'frontend_available' => true,
+                ]
+            );
 
 		$this->end_controls_section();
         // End Layout Controls
