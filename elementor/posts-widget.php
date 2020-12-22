@@ -112,7 +112,7 @@ class Mos_Posts_Widget extends Widget_Base {
                 [
                     'label' => __('Posts Per Page', 'essential-addons-for-elementor-lite'),
                     'type' => Controls_Manager::NUMBER,
-                    'default' => '4',
+                    'default' => '3',
                 ]
             );
 
@@ -150,28 +150,6 @@ class Mos_Posts_Widget extends Widget_Base {
 
                 ]
             );
-        
-            $this->add_responsive_control(
-                'eael_post_grid_columns',
-                [
-                    'label' => esc_html__('Column', 'elementor'),
-                    'type' => Controls_Manager::SELECT,
-                    'default' => 'eael-col-4',
-                    'tablet_default' => 'eael-col-2',
-                    'mobile_default' => 'eael-col-1',
-                    'options' => [
-                        'eael-col-1' => esc_html__('1', 'elementor'),
-                        'eael-col-2' => esc_html__('2', 'elementor'),
-                        'eael-col-3' => esc_html__('3', 'elementor'),
-                        'eael-col-4' => esc_html__('4', 'elementor'),
-                        'eael-col-5' => esc_html__('5', 'elementor'),
-                        'eael-col-6' => esc_html__('6', 'elementor'),
-                    ],
-                    'prefix_class' => 'elementor-grid%s-',
-                    'frontend_available' => true,
-                ]
-            );
-        
 		$this->end_controls_section();
         //End Query Controls
         // Start Layout Controls
@@ -195,20 +173,29 @@ class Mos_Posts_Widget extends Widget_Base {
                         'card' => __( 'Card', 'elementor' ),
                     ],
                 ]
-            );		
-            $this->add_control(
-                '_content_layout_tab_per_page',
+            );	
+            $this->add_responsive_control(
+                '_content_layout_tab_columns',
                 [
-                    'label' => __( 'Posts Per Page', 'elementor' ),
-                    // 'label_block' => true,
-                    'type' => Controls_Manager::NUMBER,
-                    'default' => '3',                    
-				    'min' => 1,
+                    'label' => esc_html__('Column', 'elementor'),
+                    'type' => Controls_Manager::SELECT,
+                    'default' => 'eael-col-4',
+                    'tablet_default' => 'eael-col-2',
+                    'mobile_default' => 'eael-col-1',
+                    'options' => [
+                        'eael-col-1' => esc_html__('1', 'elementor'),
+                        'eael-col-2' => esc_html__('2', 'elementor'),
+                        'eael-col-3' => esc_html__('3', 'elementor'),
+                        'eael-col-4' => esc_html__('4', 'elementor'),
+                        'eael-col-5' => esc_html__('5', 'elementor'),
+                        'eael-col-6' => esc_html__('6', 'elementor'),
+                    ],
+                    'prefix_class' => 'elementor-grid%s-',
+                    'frontend_available' => true,
                 ]
             );
-
             $this->add_control(
-                'hr',
+                'hr-image',
                 [
                     'type' => \Elementor\Controls_Manager::DIVIDER,
                 ]
@@ -230,13 +217,88 @@ class Mos_Posts_Widget extends Widget_Base {
                     'default' => 'large',
                     'separator' => 'none',
                 ]
-            );
-            $this->add_group_control(
-                Group_Control_Image_Size::get_type(),
+            );            
+            $this->add_responsive_control(
+                '_content_layout_tab_image_ratio',
                 [
-                    'name' => 'image', // Usage: `{name}_size` and `{name}_custom_dimension`, in this case `image_size` and `image_custom_dimension`.
-                    'default' => 'large',
-                    'separator' => 'none',
+                    'label' => __('Image Ratio', 'elementor'),
+                    'type' => Controls_Manager::TEXT,
+                    'default' => '.6',
+                    'tablet_default' => '',
+                    'mobile_default' => '',
+                    'frontend_available' => true,
+                    'condition' => [
+                        '_content_layout_tab_skin' => ['clasic','card']
+                    ],
+                ]
+            );
+            $this->add_control(
+                'hr-title',
+                [
+                    'type' => \Elementor\Controls_Manager::DIVIDER,
+                ]
+            );
+            $this->add_control(
+                '_content_layout_tab_title',
+                [
+                    'label' => __( 'Title', 'elementor' ),
+                    // 'label_block' => true,
+                    'type' => Controls_Manager::SWITCHER,                    
+                    'label_on' => 'Hide',
+                    'label_off' => 'Show',
+                ]
+            );
+            //Title HTML Tag		
+            $this->add_control(
+                '_content_layout_tab_title_tag',
+                [
+                    'label' => __( 'Title HTML Tag', 'elementor' ),
+                    // 'label_block' => true,
+                    'type' => Controls_Manager::SELECT,
+                    'default' => 'h3',
+                    'options' => [
+                        'h1' => __('H1', 'elementor'),
+                        'h2' => __('H2', 'elementor'),
+                        'h3' => __('H3', 'elementor'),
+                        'h4' => __('H4', 'elementor'),
+                        'h5' => __('H5', 'elementor'),
+                        'h6' => __('H6', 'elementor'),
+                        'div' => __('div', 'elementor'),
+                        'span' => __('span', 'elementor'),
+                        'p' => __('p', 'elementor'),                        
+                    ],
+                    'condition' => [
+                        '_content_layout_tab_title' => 'yes',
+                    ],
+                ]
+            );
+            $this->add_control(
+                'hr-excerpt',
+                [
+                    'type' => \Elementor\Controls_Manager::DIVIDER,
+                ]
+            );
+            $this->add_control(
+                '_content_layout_tab_excerpt',
+                [
+                    'label' => __( 'Excerpt', 'elementor' ),
+                    // 'label_block' => true,
+                    'type' => Controls_Manager::SWITCHER,                    
+                    'label_on' => 'Hide',
+                    'label_off' => 'Show',
+                ]
+            );
+            $this->add_control(
+                '_content_layout_tab_excerpt_size',
+                [
+                    'label' => __( 'Excerpt Length', 'plugin-domain' ),
+                    'type' => Controls_Manager::NUMBER,
+                    'min' => 5,
+                    'step' => 1,
+                    'default' => 15,
+                    'condition' => [
+                        '_content_layout_tab_excerpt' => 'yes',
+                    ],
                 ]
             );
 
@@ -249,6 +311,16 @@ class Mos_Posts_Widget extends Widget_Base {
 				'label' => __( 'Pagination', 'elementor' ),
 			]
 		);
+            $this->add_control(
+                '_content_pagination_tab_pagination',
+                [
+                    'label' => __( 'Pagination', 'elementor' ),
+                    // 'label_block' => true,
+                    'type' => Controls_Manager::SWITCHER,                    
+                    'label_on' => 'Hide',
+                    'label_off' => 'Show',
+                ]
+            );
         
 		$this->end_controls_section();
         //End Pagination Controls
@@ -385,7 +457,7 @@ class Mos_Posts_Widget extends Widget_Base {
         $element_id = gettimeofday()['sec'] . rand(1000,9999);
         
         echo '<div class="mos-post-grid">
-            <div class="mos-post-grid-seven mos-post-grid-merge-two-rows" style="background-color: antiquewhite">This is Section One</div>
+            <div class="mos-post-grid-seven mos-post-grid-merge-two-rows" style="background-color: antiquewhite">'.$settings['_content_layout_tab_excerpt'].'</div>
             <div class="mos-post-grid-five" style="background-color:azure">This is Section Two</div>
             <div class="mos-post-grid-five" style="background-color:aquamarine">This is Section Three</div>
         </div>';       
